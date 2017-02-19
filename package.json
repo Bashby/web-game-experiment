@@ -1,0 +1,34 @@
+{
+  "name": "webrtcexperiment",
+  "version": "1.0.0",
+  "description": "This is a test project.",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^4.17.4",
+    "webpack": "^2.2.1"
+  },
+  "devDependencies": {
+    "chunk-manifest-webpack-plugin": "^1.0.0",
+    "clean-webpack-plugin": "^0.1.15",
+    "favicons-webpack-plugin": "0.0.7",
+    "html-webpack-plugin": "^2.28.0",
+    "script-ext-html-webpack-plugin": "^1.7.1",
+    "webpack": "^2.2.1",
+    "webpack-chunk-hash": "^0.4.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "./node_modules/.bin/webpack --config ./webpack.config.js",
+    "build_clean": "BUILD_CLEAN=true ./node_modules/.bin/webpack --config ./webpack.config.js",
+    "build_prod": "NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js",
+    "build_prod_clean": "BUILD_CLEAN=true NODE_ENV=production ./node_modules/.bin/webpack --config ./webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/ashbyb/webrtcexperiment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/ashbyb/webrtcexperiment#readme"
+}
