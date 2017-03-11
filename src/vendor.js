@@ -1,2 +1,7 @@
-// nothing in here atm
-// this is something new!!!
+
+var hello = ['hi'];
+
+// Export Vendor libs
+module.exports = [
+  hello,
+];
