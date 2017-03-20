@@ -2,12 +2,19 @@
 // Import vender libs
 //import { join } from "lodash";
 import {Texture, Sprite, Graphics} from "pixi.js";
+import {GUI} from "dat.gui";
+import {STATS} from "stats.js";
+
 
 // Import local libs
 import {Renderer} from "./pixi/utils";
 
 // Import assets
-const image1 = <string>require("./img/favicon.png");
+const image1 = <string>require("../images/favicon.png");
+require("normalize.css");
+
+// Builds stats
+var stats = new Stats();
 
 var r = new Renderer();
 var s = r.stage;

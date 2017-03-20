@@ -26,11 +26,17 @@ var babelOptions = {
   ]
 };
 
+// Set some paths
+const BASE_PATH = path.resolve(__dirname, 'src');
+const SCRIPT_PATH = path.resolve(BASE_PATH, 'scripts');
+const STYLE_PATH = path.resolve(BASE_PATH, 'styles');
+const IMAGE_PATH = path.resolve(BASE_PATH, 'images');
+
 module.exports = {
-  context: path.resolve(__dirname, 'src'),
+  context: BASE_PATH,
   entry: {
-    vendor: ["lodash", "pixi.js", "./vendor.ts"],
-    app: "./app.ts"
+    vendor: ["lodash", "pixi.js", path.resolve(SCRIPT_PATH, "vendor.ts")],
+    app: path.resolve(SCRIPT_PATH, "app.ts")
   },
   output: {
     path: path.resolve(__dirname, 'build'),
@@ -39,8 +45,22 @@ module.exports = {
   },
   module: {
     rules: [
-      { test: /\.css$/, use: ['style-loader', 'css-loader'] },
-      { test: /\.json$/, use: 'json-loader' },
+      {
+        test: /\.css$/,
+        include: [
+          BASE_PATH,
+          path.resolve(__dirname, "node_modules/normalize.css/")
+        ],
+        use: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: "css-loader"
+        })
+      },
+      {
+        test: /\.json$/,
+        exclude: /node_modules/,
+        use: 'json-loader'
+      },
       {
         test: /\.ts(x?)$/,
         exclude: /node_modules/,
@@ -66,9 +86,10 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|svg|eot|ttf|woff|woff2)$/i, // Notes: Embed small images in CSS via data-urls
-        loaders: [
+        exclude: /node_modules/,
+        use: [
           {
-            "loader": 'url-loader',
+            loader: 'url-loader',
             query: {
               limit: 10000
             }
@@ -76,9 +97,9 @@ module.exports = {
           {
             loader: 'image-webpack-loader',
             query: {
-              progressive: true,
-              optimizationLevel: 7,
-              interlaced: false,
+              mozjpeg: { progressive: true },
+              gifsicle: { interlaced: false },
+              optipng: { optimizationLevel: 7 },             
               pngquant: {
                 quality: '65-90',
                 speed: 4
@@ -129,7 +150,7 @@ module.exports = {
       name: 'webpackManifest'
     }),
     new FaviconsWebpackPlugin({
-      logo: path.resolve(__dirname, './src/img/favicon.png'),
+      logo: path.resolve(IMAGE_PATH, 'favicon.png'),
       prefix: 'favicons-[hash]/',
       title: 'app-favicon',
       persistentCache: true,

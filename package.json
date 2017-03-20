@@ -2,14 +2,17 @@
   "name": "webrtcexperiment",
   "version": "0.0.1",
   "description": "This is a test project playing with WebRTC.",
-  "main": "index.js",
+  "main": "./scripts/app.ts",
+  "types": "./scripts/globals.d.ts",
   "dependencies": {
     "lodash": "^4.17.4",
     "pixi.js": "^4.4.1"
   },
   "devDependencies": {
+    "@types/dat-gui": "^0.6.2",
     "@types/lodash": "^4.14.55",
     "@types/pixi.js": "^4.4.0",
+    "@types/stats.js": "^0.16.0",
     "babel-core": "^6.23.1",
     "babel-loader": "^6.4.0",
     "babel-preset-env": "^1.2.1",
@@ -18,13 +21,16 @@
     "chunk-manifest-webpack-plugin": "^1.0.0",
     "clean-webpack-plugin": "^0.1.15",
     "css-loader": "^0.27.1",
+    "dat.gui": "^0.6.1",
     "extract-text-webpack-plugin": "^2.1.0",
     "favicons-webpack-plugin": "0.0.7",
     "html-webpack-plugin": "^2.28.0",
     "html-webpack-template": "^6.0.1",
     "image-webpack-loader": "^3.2.0",
+    "normalize.css": "^5.0.0",
     "pixi.js": "^4.4.1",
     "script-ext-html-webpack-plugin": "^1.7.1",
+    "stats.js": "^0.17.0",
     "style-loader": "^0.13.2",
     "ts-loader": "^2.0.1",
     "typescript": "^2.2.1",
@@ -47,9 +53,11 @@
     "webrtc",
     "javascript",
     "typescript",
-    "game"
+    "game",
+    "websocket",
+    "realtime"
   ],
   "author": "Brendan Ashby",
-  "license": "ISC",
+  "license": "UNLICENSED",
   "homepage": "https://bitbucket.org/ashbyb/webrtcexperiment#readme"
 }
