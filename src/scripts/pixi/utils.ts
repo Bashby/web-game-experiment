@@ -1,4 +1,4 @@
-import {Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer} from "pixi.js";
+import {Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer, utils} from "pixi.js";
 
 export class Renderer {
     renderer: WebGLRenderer | CanvasRenderer;
@@ -24,6 +24,7 @@ export class Renderer {
      * Gets the renderer ready for first use
      */
     private initialize() {
+        utils.skipHello();
         this.createRenderTargets();
         this.registerResize();
         this.rendererResize(); // Do a first resize on init

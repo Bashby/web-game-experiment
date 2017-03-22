@@ -2,9 +2,9 @@
 // Import vender libs
 //import { join } from "lodash";
 import {Texture, Sprite, Graphics} from "pixi.js";
-import {GUI} from "dat.gui";
-import {STATS} from "stats.js";
-
+import {GUI} from "dat-gui";
+//import * as Stats from "stats.js";
+require("fpsmeter");
 
 // Import local libs
 import {Renderer} from "./pixi/utils";
@@ -12,9 +12,10 @@ import {Renderer} from "./pixi/utils";
 // Import assets
 const image1 = <string>require("../images/favicon.png");
 require("normalize.css");
+require("../styles/base.css");
 
-// Builds stats
-var stats = new Stats();
+// Build FPS Meter
+var meter = new (<any>window).FPSMeter({heat: 1, graph: 1, theme: 'transparent'});
 
 var r = new Renderer();
 var s = r.stage;
@@ -33,6 +34,13 @@ bunny.anchor.y = 0.5;
 // move the sprite to the center of the screen
 bunny.position.x = 200;  
 bunny.position.y = 150;
+
+// Build GUI
+var gui = new GUI();
+var f1 = gui.addFolder('Emitter Position');
+f1.add(bunny.position, 'x');
+f1.add(bunny.position, 'y');
+f1.open();
 
 // set scale
 bunny.scale.x = 0.75;
@@ -81,8 +89,8 @@ setInterval(function(){ console.log(s.width, s.height, background.width, backgro
 
 // start animating
 animate();  
-function animate() {  
-  requestAnimationFrame(animate);
+function animate() {
+  meter.tickStart();
 
   // just for fun, let's rotate mr rabbit a little
   bunny.rotation = rotateToPoint(r.renderer.plugins.interaction.mouse.global.x, r.renderer.plugins.interaction.mouse.global.y, bunny.position.x, bunny.position.y);
@@ -93,4 +101,8 @@ function animate() {
   }
   // render the container
   r.render();
+
+  meter.tick();
+
+  requestAnimationFrame(animate);
 }
