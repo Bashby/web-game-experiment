@@ -1,7 +1,1 @@
-
-var hello = ['hi'];
-
-// // Export Vendor libs
-// module.exports = [
-//   hello,
-// ];
+// Vendor files live here

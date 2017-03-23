@@ -1,7 +1,7 @@
 import {Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer, utils} from "pixi.js";
 
 export class Renderer {
-    renderer: WebGLRenderer | CanvasRenderer;
+    private _pixiRenderer: WebGLRenderer | CanvasRenderer;
     stage: Container;
     canvas: HTMLCanvasElement;
 
@@ -17,7 +17,7 @@ export class Renderer {
      * Core render loop for the renderer
      */
     public render() {
-        this.renderer.render(this.stage);
+        this._pixiRenderer.render(this.stage);
     }
 
      /**
@@ -43,9 +43,9 @@ export class Renderer {
      */
     private createRenderTargets() {
         this.canvas = document.createElement('canvas');
-        this.renderer = autoDetectRenderer(this.targetWidth, this.targetHeight, { view: this.canvas, resolution: window.devicePixelRatio })
-        this.renderer.autoResize = true;
-        document.body.appendChild(this.renderer.view);
+        this._pixiRenderer = autoDetectRenderer(this.targetWidth, this.targetHeight, { view: this.canvas, resolution: window.devicePixelRatio })
+        this._pixiRenderer.autoResize = true;
+        document.body.appendChild(this._pixiRenderer.view);
     }
 
     /**
@@ -54,7 +54,7 @@ export class Renderer {
     public rendererResize() {
         var width = window.innerWidth, height = window.innerHeight;
 
-        this.renderer.resize(width, height);
+        this._pixiRenderer.resize(width, height);
 
         /**
          * Scale the canvas horizontally and vertically keeping in mind the screen estate we have
