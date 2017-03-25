@@ -1,18 +1,18 @@
 // Load vendor libs
-import {Texture, Sprite, Graphics} from "pixi.js";
+//import {Texture, Sprite, Graphics} from "pixi.js";
 
 // Import local libs
-import {World} from "./pixi/world";
-import {Bunny} from "./pixi/actor";
+import {Game} from "./core/game";
 
 // Load Styles
 require("../styles/base.css");
 
-// Init world
-var world = new World();
+// Init game
+var game = new Game();
+game.start();
 
 // Create a new Sprite using the texture
-var bunny = new Bunny(world.assets.getTexture(Bunny.textureName));
+//var bunny = new Bunny(world.assets.getTexture(Bunny.textureName));
 
 // // center the sprite's anchor point
 // bunny.anchor.x = 0.5;  
@@ -77,3 +77,11 @@ var bunny = new Bunny(world.assets.getTexture(Bunny.textureName));
 //       bullets[b].position.x += Math.cos(bullets[b].rotation)*bulletSpeed;
 //       bullets[b].position.y += Math.sin(bullets[b].rotation)*bulletSpeed;
 //   }
+
+// private generateBackground() {
+//     // var background = new Graphics();  
+//     // background.beginFill(0x123456);  
+//     // background.drawRect(0, 0, r.renderer.width, r.renderer.height);  
+//     // background.endFill();  
+//     // r.stage.addChild(background);
+// }

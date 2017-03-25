@@ -1,25 +1,6 @@
-import {Sprite, Texture, Matrix} from "pixi.js";
+import {BaseActor} from "./base";
 
-interface IdeltaStruct {
-    maxRotation: number; // radians
-    minRotation: number;
-    maxAcceleration: number;
-    minAcceleration: number;
-    maxVelocity: number;
-    minVelocity: number;
-    minSize: number;
-    maxSize: number;
-}
-
-abstract class Actor {
-    protected abstract sprite: Sprite;
-    protected abstract targetTransform: Matrix;
-    protected abstract transformLimits: IdeltaStruct;
-
-    public abstract update(delta: number): void
-}
-
-export class Bunny implements Actor {
+export class Bunny implements BaseActor {
     public static readonly TEXTURE_NAME: string = "carrot";
     private _sprite: Sprite;
     private _transformLimits: IdeltaStruct = {
