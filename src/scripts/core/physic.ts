@@ -1,8 +1,27 @@
-import {Engine, World, Body, Constraint, Composite} from "matter-js";
+import {Engine, World, Body} from "matter-js";
+import {BaseActor} from "../actor/base";
+//import {Constructable} from "./utils";
 
-abstract class Simulatable {
-
+export interface ISimulatable {
+        getSimulatable(): Body;
 }
+
+export function canSimulate(arg: BaseActor): arg is ISimulatable {
+   return (arg as ISimulatable).getSimulatable !== undefined;
+}
+
+// export function Simulatable<BC extends Constructable>(Base: BC) {
+//     return class extends Base implements ISimulatable {
+//         protected body: Body;
+//         getBody(): Body {
+//             return this.body;
+//         }
+//     };
+// }
+
+// export abstract class Simulatable {
+//     abstract getBody(): Body;
+// }
 
 export class PhysicsManager {
     private _engine: Engine;
@@ -13,16 +32,15 @@ export class PhysicsManager {
         this._world = this._engine.world;
     }
 
-    public scope() {
-        return this;
-    }
-
     public update(delta: number): void {
         Engine.update(this._engine, delta);
     }
 
-    public add(object: Composite | Constraint | Body): void {
-        World.add(this._world, object);
-    }
+    // public oldadd(object: Composite | Constraint | Body): void {
+    //     World.add(this._world, object);
+    // }
 
+    add(simulatable: ISimulatable) {
+        World.add(this._world, simulatable.getSimulatable());
+    }
 }

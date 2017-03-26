@@ -1,8 +1,37 @@
-import {Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer, utils} from "pixi.js";
+import {Sprite, Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer, utils} from "pixi.js";
+//import {Constructable} from "./utils";
+import {BaseActor} from "../actor/base";
 
-abstract class Renderable {
-
+export interface IRenderable {
+    getRenderable(): Sprite;
+    render(): void;
 }
+
+export function canRender(arg: BaseActor): arg is IRenderable {
+   return (arg as IRenderable).render !== undefined && (arg as IRenderable).getRenderable !== undefined;
+}
+
+// export function Renderable<BC extends Constructable>(Base: BC) {
+//     return class extends Base implements IRenderable {
+//         protected _sprite: Sprite;
+//         get sprite(): Sprite {
+//             return this._sprite;
+//         }
+//         set sprite(sprite: Sprite) {
+//             this._sprite = sprite;
+//         }
+//         public render(): void {}
+//     };
+// }
+
+// function canRender(arg: BaseActor): arg is IRender {
+//    return (arg as IRender).render !== undefined;
+// }
+
+// export abstract class Renderable {
+//     protected abstract sprite: Sprite;
+//     abstract render(): void;
+// }
 
 export class RenderManager {
     pixi_renderer: WebGLRenderer | CanvasRenderer;
@@ -47,7 +76,7 @@ export class RenderManager {
      */
     private createRenderTargets() {
         this.canvas = document.createElement('canvas');
-        this.pixi_renderer = autoDetectRenderer(this.targetWidth, this.targetHeight, { view: this.canvas, resolution: window.devicePixelRatio })
+        this.pixi_renderer = autoDetectRenderer(this.targetWidth, this.targetHeight, { backgroundColor : 0x1099bb, view: this.canvas, resolution: window.devicePixelRatio })
         this.pixi_renderer.autoResize = true;
         document.body.appendChild(this.pixi_renderer.view);
     }
@@ -74,5 +103,10 @@ export class RenderManager {
          * iOS likes to scroll when rotating - fix that 
          */
         window.scrollTo(0, 0);
+    }
+
+    add(renderable: IRenderable) {
+        this.stage.addChild(renderable.getRenderable());
+        console.log('added', renderable, this.stage);
     }
 }

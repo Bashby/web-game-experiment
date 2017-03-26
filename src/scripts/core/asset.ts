@@ -2,7 +2,7 @@
 import {loaders} from "pixi.js";
 
 // Import assets
-const image1 = <string>require("../images/favicon.png");
+const image1 = <string>require("../../images/favicon.png");
 
 
 export class AssetManager {
@@ -38,10 +38,11 @@ export class AssetManager {
      */
     public getTexture(name: string) {
         let target = this.loader.resources[name];
+        console.log("TEX:", target);
         if (target) {
             return target.texture;
         } else {
-            return null;
+            throw new Error("No Texture Found!");
         }
     }
 }

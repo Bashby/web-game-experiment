@@ -91,7 +91,7 @@ module.exports = {
           {
             loader: 'url-loader',
             query: {
-              limit: 10000
+              limit: 1 // was 10000
             }
           },
           {

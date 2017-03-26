@@ -9,4 +9,8 @@ export class InputManager {
         this._manager_touch = new interaction.InteractionManager(renderer);
         this._manager_keyboard = Mousetrap;
     }
+
+    update(): void {
+
+    }
 }
