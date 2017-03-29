@@ -28,9 +28,9 @@ var babelOptions = {
 
 // Set some paths
 const BASE_PATH = path.resolve(__dirname, 'src');
-const SCRIPT_PATH = path.resolve(BASE_PATH, 'scripts');
-const STYLE_PATH = path.resolve(BASE_PATH, 'styles');
-const IMAGE_PATH = path.resolve(BASE_PATH, 'images');
+const SCRIPT_PATH = path.resolve(BASE_PATH, 'script');
+const STYLE_PATH = path.resolve(BASE_PATH, 'stylesheet');
+const IMAGE_PATH = path.resolve(BASE_PATH, 'image');
 
 module.exports = {
   context: BASE_PATH,
@@ -59,7 +59,9 @@ module.exports = {
       {
         test: /\.json$/,
         exclude: /node_modules/,
-        use: 'json-loader'
+        use: {
+          loader: 'json-loader',
+        }
       },
       {
         test: /\.ts(x?)$/,
@@ -91,7 +93,7 @@ module.exports = {
           {
             loader: 'url-loader',
             query: {
-              limit: 1 // was 10000
+              limit: 10000
             }
           },
           {
