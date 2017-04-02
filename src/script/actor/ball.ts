@@ -1,75 +1,20 @@
 // Vendor libs
-import {Sprite, Texture, Point, utils} from "pixi.js";
-import {Body, Bodies} from "matter-js";
+import {Point} from "pixi.js";
 
 // Local libs
-import {BaseActor, IGameActor} from "./base";
-import {Config} from "../core/config";
+import {GameActor} from "./base";
 
-export class Ball extends BaseActor implements IGameActor {
-    private _texture: Texture = utils.TextureCache[Config.asset.actor.bunny.texture];
-    private _sprite: Sprite;
-    private _body: Body;
+export class Ball extends GameActor {
+    static readonly ACTOR_TYPE = 'ball';
 
     constructor(x: number, y: number) {
-        super();
-        this._sprite = new Sprite(this._texture);
-        this._sprite.anchor.set(0.5);
-        this._sprite.position.set(x, y);
-
-        this._body = Bodies.circle(this._sprite.position.x, this._sprite.position.y, this._sprite.width / 2);
+        super(x, y, Ball.ACTOR_TYPE);
     }
 
     render(): void {
         this._sprite.position = new Point(this._body.position.x, this._body.position.y);
     }
-
-    getSimulatable(): Body {
-        return this._body;
-    }
-
-    getRenderable(): Sprite {
-        return this._sprite;
-    }
-
-    hide(): void {
-        this._sprite.visible = false;
-    }
-
-    show(): void {
-        this._sprite.visible = true;
-    }
-
-    isVisible(): boolean {
-        return this._sprite.visible;
-    }
 }
-
-// Create a new Sprite using the texture
-//var bunny = new Bunny(world.assets.getTexture(Bunny.textureName));
-
-// // center the sprite's anchor point
-// bunny.anchor.x = 0.5;  
-// bunny.anchor.y = 0.5;
-
-// // move the sprite to the center of the screen
-// bunny.position.x = 200;  
-// bunny.position.y = 150;
-
-// // Build GUI
-// var gui = new GUI();
-// var f1 = gui.addFolder('Emitter Position');
-// f1.add(bunny.position, 'x');
-// f1.add(bunny.position, 'y');
-// f1.open();
-
-// // set scale
-// bunny.scale.x = 0.75;
-// bunny.scale.y = 0.75;
-
-
-
-// r.stage.addChild(bunny);
 
 // r.stage.interactive = true;
 
@@ -101,8 +46,6 @@ export class Ball extends BaseActor implements IGameActor {
 //   //var degrees = angle * 180/ Math.PI;
 //   return angle;
 // }
-
-
 
 //  // just for fun, let's rotate mr rabbit a little
 //   bunny.rotation = rotateToPoint(r.renderer.plugins.interaction.mouse.global.x, r.renderer.plugins.interaction.mouse.global.y, bunny.position.x, bunny.position.y);

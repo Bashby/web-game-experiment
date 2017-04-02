@@ -10,7 +10,7 @@ import {InputManager} from "./input";
 import {canSimulate, PhysicsManager} from "./physic";
 import {NetworkManager} from "./network";
 
-import {BaseActor} from "../actor/base";
+import {GameActor} from "../actor/base";
 import {fpsmeter} from "../utils";
 
 export interface IUpdatable {
@@ -85,9 +85,16 @@ export class Game {
     //     this._ticker.add(updatee.update, updatee.scope())
     // }
 
-    public add(entity: BaseActor) {
+    /**
+     * Adds an actor into the game
+     * @param entity An instance or child of BaseActor
+     * @returns the passed BaseActor
+     */
+    public add(entity: GameActor): GameActor {
         if(canRender(entity)) { this._renderer.add(entity); }
         if(canSimulate(entity)) { this._physics.add(entity); }
+
+        return entity;
     }
 }
 

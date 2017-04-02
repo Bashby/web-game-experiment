@@ -1,5 +1,6 @@
 // Vendor libs
 import {loaders} from "pixi.js";
+import {Howl} from "howler";
 
 // Local libs
 import {Config} from "./config";
@@ -14,7 +15,7 @@ class AssetLoader {
 }
 
 export class AssetManager {
-    loader: loaders.Loader = new loaders.Loader();
+    private _textureLoader: loaders.Loader = new loaders.Loader();
     firstTimeLoaded: boolean = false;
 
     /**
@@ -33,11 +34,9 @@ export class AssetManager {
      * @returns nothing
      */
     private initialize() {
-        //debugger;
-        //console.log(Config);
-        this.loader.add('carrot', image1);
+        this._textureLoader.add('carrot', image1);
         //this.loader.add('spritesheet1', spritesheet1);
-        this.loader.load(() => { this.firstTimeLoaded = true; });
+        this._textureLoader.load(() => { this.firstTimeLoaded = true; });
     }
 
     /**
@@ -48,7 +47,7 @@ export class AssetManager {
      * @returns PIXI.texture
      */
     public getTexture(name: string) {
-        var target = this.loader.resources[name];
+        var target = this._textureLoader.resources[name];
         if (target) {
             return target.texture;
         } else {

@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/dat-gui": "^0.6.2",
     "@types/fpsmeter": "^0.3.28",
+    "@types/howler": "^2.0.2",
     "@types/lodash": "^4.14.55",
     "@types/matter-js": "^0.9.32",
     "@types/mousetrap": "^1.5.33",
@@ -29,6 +30,7 @@
     "extract-text-webpack-plugin": "^2.1.0",
     "favicons-webpack-plugin": "0.0.7",
     "fpsmeter": "^0.3.1",
+    "howler": "^2.0.3",
     "html-webpack-plugin": "^2.28.0",
     "html-webpack-template": "^6.0.1",
     "image-webpack-loader": "^3.2.0",

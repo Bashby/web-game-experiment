@@ -1,4 +1,14 @@
-asset:
-  actor:
-    bunny:
-      texture: carrot
+---
+# Actors
+actors:
+  bunny:
+    texture: carrot
+    collisionType: circle
+  ball:
+    texture: carrot
+    collisionType: circle
+  floor:
+    texture: rock
+    collisionType: rectangle
+    static: true
+...

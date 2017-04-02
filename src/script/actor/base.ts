@@ -1,6 +1,11 @@
-// // import {Matrix} from "pixi.js";
-// import {Sprite} from "pixi.js";
-// import {Body} from "matter-js";
+// Vendor libs
+import {Sprite, Texture, Point, utils} from "pixi.js";
+import {Body, Bodies} from "matter-js";
+
+// Local libs
+import {Config} from "../core/config";
+export {Ball} from "./ball";
+export {Wall} from "./wall";
 
 // Define Interfaces
 import {ISimulatable} from "../core/physic";
@@ -34,6 +39,48 @@ export interface IGameActor extends ISimulatable, IRenderable {}
 // // }
 
 export class BaseActor {}
+export class GameActor extends BaseActor implements IGameActor {
+    protected _texture: Texture;
+    protected _sprite: Sprite;
+    protected _body: Body;
+
+    constructor(
+        x: number = 0,
+        y: number = 0,
+        actorType: string = 'base',
+        staticBody: boolean = false
+    ) {
+        super();
+        this._texture = utils.TextureCache[Config.actors[actorType].texture];
+        this._sprite = new Sprite(this._texture);
+        this._sprite.anchor.set(0.5);
+        this._sprite.position.set(x, y);
+
+        this._body = Bodies.circle(x, y, this._sprite.width / 2, { isStatic: staticBody });
+    }
+
+    render(): void {}
+
+    getSimulatable(): Body {
+        return this._body;
+    }
+
+    getRenderable(): Sprite {
+        return this._sprite;
+    }
+
+    hide(): void {
+        this._sprite.visible = false;
+    }
+
+    show(): void {
+        this._sprite.visible = true;
+    }
+
+    isVisible(): boolean {
+        return this._sprite.visible;
+    }
+}
 
 // export abstract class RenderableActor extends BaseActor implements IRenderableActor {
 //     render(): void {

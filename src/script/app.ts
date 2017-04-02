@@ -3,7 +3,9 @@
 
 // Import local libs
 import {Game} from "./core/game";
-import {Ball} from "./actor/ball";
+import {Ball, Wall} from "./actor/base";
+//import {Ball} from "./actor/ball";
+//import {Floor} from "./actor/ball";
 
 // Load Styles
 require("../stylesheet/base.css");
@@ -15,9 +17,10 @@ function check() {
     if (game.asset.firstTimeLoaded) {
         game.asset.firstTimeLoaded = false;
 
-        // Put a bunny on it!
-        var ball = new Ball(300, 200);
-        game.add(ball);
+        // Put actors on the stage
+        var ball = game.add(new Ball(300, 200));
+
+        //var floor = game.add(new Wall());
 
         // Build GUI
         var f1 = game.debug_gui.addFolder('Bunny Visuals');
