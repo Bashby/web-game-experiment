@@ -1,2 +1,4 @@
-// This will manage config files
-// probably yaml?
+// Import config
+const config = <any>require("../config.yaml");
+
+export {config as Config};

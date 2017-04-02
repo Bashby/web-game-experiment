@@ -37,6 +37,7 @@ export class RenderManager {
     pixi_renderer: WebGLRenderer | CanvasRenderer;
     stage: Container;
     canvas: HTMLCanvasElement;
+    renderables: IRenderable[] = [];
 
     constructor(readonly targetWidth: number = 1280, readonly targetHeight: number = 720) {
         // The main (root) container of the renderer
@@ -50,6 +51,10 @@ export class RenderManager {
      * Core render loop for the renderer
      */
     public render() {
+        // Render the renderables
+        this.renderables.forEach((renderable) => { renderable.render(); });
+
+        // Render the stage
         this.pixi_renderer.render(this.stage);
     }
 
@@ -105,7 +110,8 @@ export class RenderManager {
         window.scrollTo(0, 0);
     }
 
-    add(renderable: IRenderable) {
+    public add(renderable: IRenderable) {
         this.stage.addChild(renderable.getRenderable());
+        this.renderables.push(renderable);
     }
 }

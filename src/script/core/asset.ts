@@ -1,11 +1,17 @@
-// Import Libs
+// Vendor libs
 import {loaders} from "pixi.js";
 
-// Import assets
-const image1 = <string>require("../../image/favicon.png");
-const spritesheet1 = <string>require("url-loader!../../image/tileset/tileset1.json");
-const spritesheet1_image = <string>require("../../image/tileset/tileset1.png");
+// Local libs
+import {Config} from "./config";
 
+// Assets
+const image1 = <string>require("../../image/favicon.png");
+//const spritesheet1 = <string>require("../../image/tileset/tileset1.json");
+//const spritesheet1_image = <string>require("../../image/tileset/tileset1.png");
+
+class AssetLoader {
+    // load the spritesheet here using my own code, screw the pixi loader!
+}
 
 export class AssetManager {
     loader: loaders.Loader = new loaders.Loader();
@@ -27,12 +33,11 @@ export class AssetManager {
      * @returns nothing
      */
     private initialize() {
+        //debugger;
+        //console.log(Config);
         this.loader.add('carrot', image1);
-        this.loader.add('spritesheet1', spritesheet1);
-        this.loader.load((loader: loaders.Loader, resources: loaders.IResourceDictionary ) => {
-            this.firstTimeLoaded = true;
-            console.log(loader, resources, spritesheet1_image);
-        });
+        //this.loader.add('spritesheet1', spritesheet1);
+        this.loader.load(() => { this.firstTimeLoaded = true; });
     }
 
     /**

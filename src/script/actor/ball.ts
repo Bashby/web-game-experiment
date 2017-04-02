@@ -1,25 +1,28 @@
-import {BaseActor, IGameActor} from "./base";
-import {Sprite, Texture} from "pixi.js";
+// Vendor libs
+import {Sprite, Texture, Point, utils} from "pixi.js";
 import {Body, Bodies} from "matter-js";
 
-export class Bunny extends BaseActor implements IGameActor {
-    static readonly TEXTURE_NAME: string = "Blocks/block_01.png";
-    //static readonly TEXTURE_NAME: string = "carrot";
+// Local libs
+import {BaseActor, IGameActor} from "./base";
+import {Config} from "../core/config";
+
+export class Ball extends BaseActor implements IGameActor {
+    private _texture: Texture = utils.TextureCache[Config.asset.actor.bunny.texture];
     private _sprite: Sprite;
     private _body: Body;
 
-    constructor(texture: Texture) {
+    constructor(x: number, y: number) {
         super();
-        this._sprite = new Sprite(texture);
+        this._sprite = new Sprite(this._texture);
         this._sprite.anchor.set(0.5);
-        this._sprite.position.set(200, 200);
-        this._sprite.scale.set(1.0);
-        //this._sprite.
+        this._sprite.position.set(x, y);
 
-        this._body = Bodies.circle(this._sprite.position.x, this._sprite.position.y, 256);
+        this._body = Bodies.circle(this._sprite.position.x, this._sprite.position.y, this._sprite.width / 2);
     }
 
-    render(): void {}
+    render(): void {
+        this._sprite.position = new Point(this._body.position.x, this._body.position.y);
+    }
 
     getSimulatable(): Body {
         return this._body;

@@ -1,5 +1,5 @@
 // Third Party Libs
-import {ticker} from "pixi.js";
+import {ticker, settings} from "pixi.js";
 import {GUI} from "dat-gui";
 
 // Local Libs
@@ -53,7 +53,7 @@ export class Game {
         this._network.update();
 
         // Process physics
-        this._physics.update(delta);
+        this._physics.update(delta / settings.TARGET_FPMS);
 
         // Render the stage
         this._renderer.render();
