@@ -7,6 +7,7 @@ import {Config} from "./config";
 
 // Assets
 const image1 = <string>require("../../image/favicon.png");
+const image2 = <string>require("../../image/stone.jpg");
 //const spritesheet1 = <string>require("../../image/tileset/tileset1.json");
 //const spritesheet1_image = <string>require("../../image/tileset/tileset1.png");
 
@@ -35,6 +36,7 @@ export class AssetManager {
      */
     private initialize() {
         this._textureLoader.add('carrot', image1);
+        this._textureLoader.add('rock', image2);
         //this.loader.add('spritesheet1', spritesheet1);
         this._textureLoader.load(() => { this.firstTimeLoaded = true; });
     }

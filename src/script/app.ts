@@ -1,11 +1,8 @@
 // Load vendor libs
 
-
 // Import local libs
 import {Game} from "./core/game";
-import {Ball, Wall} from "./actor/base";
-//import {Ball} from "./actor/ball";
-//import {Floor} from "./actor/ball";
+import {Ball, Wall} from "./core/actor";
 
 // Load Styles
 require("../stylesheet/base.css");
@@ -18,9 +15,9 @@ function check() {
         game.asset.firstTimeLoaded = false;
 
         // Put actors on the stage
-        var ball = game.add(new Ball(300, 200));
-
-        //var floor = game.add(new Wall());
+        let ball = game.add(new Ball(300, 200));
+        let center = game.renderer.getCenterOfStage();
+        let floor = game.add(new Wall(center.x, center.y));
 
         // Build GUI
         var f1 = game.debug_gui.addFolder('Bunny Visuals');

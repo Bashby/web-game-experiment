@@ -1,14 +1,35 @@
 ---
-# Actors
+game:
+  version: 0.0.1
+  author: Sye
+  debug: true
 actors:
-  bunny:
-    texture: carrot
-    collisionType: circle
-  ball:
-    texture: carrot
-    collisionType: circle
-  floor:
-    texture: rock
-    collisionType: rectangle
-    static: true
+  - name: base
+    render:
+      texture: carrot
+      position:
+        x: 100
+        y: 200
+    physic:
+      boundingBox: circle
+  - name: ball
+    render:
+      texture: carrot
+    physic:
+      boundingBox: circle
+  - name: wall
+    render:
+      spriteType: tiling
+      texture: rock
+      position:
+        x: 200
+        y: 500
+      size:
+        w: 1000
+        h: 30
+    physic:
+      boundingBox: rectangle
+      static: true
+assets:
+  textures:
 ...

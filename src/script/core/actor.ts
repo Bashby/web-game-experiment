@@ -1,15 +1,14 @@
 // Vendor libs
 import {Sprite, Texture, Point, utils} from "pixi.js";
 import {Body, Bodies} from "matter-js";
+import {find} from "lodash";
 
 // Local libs
-import {Config} from "../core/config";
-export {Ball} from "./ball";
-export {Wall} from "./wall";
+import {Config} from "./config";
 
 // Define Interfaces
-import {ISimulatable} from "../core/physic";
-import {IRenderable} from "../core/render";
+import {ISimulatable} from "./physic";
+import {IRenderable} from "./render";
 // import {IUpdatable} from "../core/game";
 
 export interface IGameActor extends ISimulatable, IRenderable {}
@@ -45,18 +44,58 @@ export class GameActor extends BaseActor implements IGameActor {
     protected _body: Body;
 
     constructor(
-        x: number = 0,
-        y: number = 0,
+        x: number = 50,
+        y: number = 50,
         actorType: string = 'base',
         staticBody: boolean = false
     ) {
         super();
-        this._texture = utils.TextureCache[Config.actors[actorType].texture];
+
+        // Assign configs, where available
+        let actorConfig = find(Config.actors, ["name", actorType]);
+
+        // Assign custom render position, if defined
+        if (actorConfig.render.position) {
+            x = actorConfig.render.position.x || x;
+            y = actorConfig.render.position.y || y;
+        }
+        
+        // Assign custom physic position, if defined
+        let physic_x, physic_y;
+        if (actorConfig.physic.position) {
+            physic_x = actorConfig.physic.position.x || x;
+            physic_y = actorConfig.physic.position.x || x;
+        } else {
+            physic_x = x;
+            physic_y = y;
+        }
+
+        // render
+        this._texture = utils.TextureCache[actorConfig.render.texture];
         this._sprite = new Sprite(this._texture);
         this._sprite.anchor.set(0.5);
         this._sprite.position.set(x, y);
+        this._sprite.width = 100;
+        this._sprite.height = 100;
 
-        this._body = Bodies.circle(x, y, this._sprite.width / 2, { isStatic: staticBody });
+        // physic
+        staticBody = actorConfig.physic.static || staticBody;
+        let options = { isStatic: staticBody, restitution: 0.6, friction: 0.1 };
+        switch(actorConfig.physic.boundingBox) {
+            case "circle": {
+                this._body = Bodies.circle(physic_x, physic_y, this._sprite.width / 2, options);
+                break;
+            }
+
+            case "rectangle": {
+                this._body = Bodies.rectangle(physic_x, physic_y, 500, 50, options);
+                break;
+            }
+
+            default: {
+                throw Error("Unknown boundingBox!");
+            }
+        }
     }
 
     render(): void {}
@@ -122,3 +161,7 @@ export class GameActor extends BaseActor implements IGameActor {
 // export abstract class VisualActor extends Renderable(BaseActor) {}
 // export abstract class PhysicalActor extends Simulatable(BaseActor) {}
 // export abstract class GameActor extends Renderable(Simulatable(BaseActor)) {}
+
+// Export actors
+export {Ball} from "../actor/ball";
+export {Wall} from "../actor/wall";

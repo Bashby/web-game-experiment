@@ -1,6 +1,9 @@
-import {Sprite, Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer, utils} from "pixi.js";
+// Vender libs
+import {Sprite, Container, autoDetectRenderer, WebGLRenderer, CanvasRenderer, Point, utils} from "pixi.js";
+
+// Local Libs
 //import {Constructable} from "./utils";
-import {BaseActor} from "../actor/base";
+import {BaseActor} from "./actor";
 
 export interface IRenderable {
     getRenderable(): Sprite;
@@ -35,11 +38,17 @@ export function canRender(arg: BaseActor): arg is IRenderable {
 
 export class RenderManager {
     pixi_renderer: WebGLRenderer | CanvasRenderer;
+    debug_renderer: CanvasRenderer;
     stage: Container;
     canvas: HTMLCanvasElement;
+    debug_canvas: HTMLCanvasElement;
     renderables: IRenderable[] = [];
+    debug: boolean = false;
 
-    constructor(readonly targetWidth: number = 1280, readonly targetHeight: number = 720) {
+    constructor(
+        readonly targetWidth: number = 1280,
+        readonly targetHeight: number = 720,
+    ) {
         // The main (root) container of the renderer
         this.stage = new Container();
 
@@ -80,10 +89,24 @@ export class RenderManager {
      * Create the DOM render target (canvas), and the PIXI render target (renderer)
      */
     private createRenderTargets() {
+        // Create DOM target
         this.canvas = document.createElement('canvas');
+        this.canvas.className = "renderer";
+        this.canvas.id = "app";
+        this.debug_canvas = document.createElement('canvas');
+        this.debug_canvas.className = "renderer";
+        this.debug_canvas.id = "debug";
+
+        // Construct renderers for targets
         this.pixi_renderer = autoDetectRenderer(this.targetWidth, this.targetHeight, { backgroundColor : 0x1099bb, view: this.canvas, resolution: window.devicePixelRatio })
         this.pixi_renderer.autoResize = true;
+        this.debug_renderer = new CanvasRenderer(this.targetWidth, this.targetHeight, { transparent: true, view: this.debug_canvas, resolution: window.devicePixelRatio })
+        this.debug_renderer.autoResize = true;
+        
+
+        // Append to DOM
         document.body.appendChild(this.pixi_renderer.view);
+        document.body.appendChild(this.debug_renderer.view);
     }
 
     /**
@@ -93,6 +116,7 @@ export class RenderManager {
         var width = window.innerWidth, height = window.innerHeight;
 
         this.pixi_renderer.resize(width, height);
+        this.debug_renderer.resize(width, height);
 
         /**
          * Scale the canvas horizontally and vertically keeping in mind the screen estate we have
@@ -110,8 +134,20 @@ export class RenderManager {
         window.scrollTo(0, 0);
     }
 
+    /**
+     * Add actors to the rendering loop
+     * 
+     * @param renderable an actor that implements IRenderable
+     */
     public add(renderable: IRenderable) {
         this.stage.addChild(renderable.getRenderable());
         this.renderables.push(renderable);
+    }
+
+    /**
+     * Returns a Point that is the center of the renderer
+     */
+    public getCenterOfStage(): Point {
+        return new Point(this.pixi_renderer.width / 2, this.pixi_renderer.height / 2);
     }
 }

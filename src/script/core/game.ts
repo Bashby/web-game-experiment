@@ -1,17 +1,21 @@
-// Third Party Libs
+//////////////////////
+// Third Party Libs //
+//////////////////////
 import {ticker, settings} from "pixi.js";
 import {GUI} from "dat-gui";
 
-// Local Libs
-// System Managers
+////////////////
+// Local Libs //
+////////////////
 import {canRender, RenderManager} from "./render";
 import {AssetManager} from "./asset";
 import {InputManager} from "./input";
 import {canSimulate, PhysicsManager} from "./physic";
 import {NetworkManager} from "./network";
-
-import {GameActor} from "../actor/base";
+import {GameActor} from "./actor";
+import {Config, IConfiguration} from "./config";
 import {fpsmeter} from "../utils";
+
 
 export interface IUpdatable {
     update(delta?: number): void;
@@ -19,27 +23,40 @@ export interface IUpdatable {
 }
 
 export class Game {
-    private _renderer: RenderManager;
+    private readonly _config: IConfiguration = Config; 
     private _ticker: ticker.Ticker;
     private _input: InputManager;
     private _network: NetworkManager;
     private _physics: PhysicsManager;
-    public asset: AssetManager;
+    renderer: RenderManager;
+    asset: AssetManager;
     debug_gui: GUI;
+    debug: boolean = false;
 
     constructor() {
-        this._renderer = new RenderManager();
+        this.renderer = new RenderManager();
         this.asset = new AssetManager();
-        this._input = new InputManager(this._renderer.pixi_renderer);
+        this._input = new InputManager(this.renderer.pixi_renderer);
         this._network = new NetworkManager();
         this._ticker = new ticker.Ticker();
-        this._physics = new PhysicsManager();
-        this.debug_gui = new GUI();
+        this._physics = new PhysicsManager({
+            debug: this._config.game.debug || false,
+            view: this.renderer.debug_canvas
+        });
 
-        // Register updatables
-        // this._ticker.add(this._input.update, this._input);
-        // this._ticker.add(this._network.update, this._network);
-        // this._ticker.add(this._physics.update, this._physics);
+        // If debugging, show debugging tools
+        if (Config.game.debug) {
+            this.debug = true;
+            this.debug_gui = new GUI();
+
+            let f1 = this.debug_gui.addFolder('Debug Tools');
+            f1.add(this, 'debug', {yes: true, no: false}).name("Debug Game").listen();
+            f1.add(this._physics, 'debug', {yes: true, no: false}).name("Debug Physics").listen();
+            f1.add(this.renderer, 'debug', {yes: true, no: false}).name("Debug Renderer").listen();
+            f1.open();
+        }
+
+        // Register with core game ticker (loop)
         this._ticker.add(this.update, this);
     }
 
@@ -56,7 +73,7 @@ export class Game {
         this._physics.update(delta / settings.TARGET_FPMS);
 
         // Render the stage
-        this._renderer.render();
+        this.renderer.render();
 
         fpsmeter.tick();
     }
@@ -91,7 +108,7 @@ export class Game {
      * @returns the passed BaseActor
      */
     public add(entity: GameActor): GameActor {
-        if(canRender(entity)) { this._renderer.add(entity); }
+        if(canRender(entity)) { this.renderer.add(entity); }
         if(canSimulate(entity)) { this._physics.add(entity); }
 
         return entity;

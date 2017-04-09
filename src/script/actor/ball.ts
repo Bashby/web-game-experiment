@@ -2,11 +2,16 @@
 import {Point} from "pixi.js";
 
 // Local libs
-import {GameActor} from "./base";
+import {GameActor} from "../core/actor";
 
 export class Ball extends GameActor {
     static readonly ACTOR_TYPE = 'ball';
 
+    /**
+     * Create a Ball at an xy position
+     * @param x the x position to create the Ball
+     * @param y the y position to create the Ball
+     */
     constructor(x: number, y: number) {
         super(x, y, Ball.ACTOR_TYPE);
     }

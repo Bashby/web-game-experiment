@@ -1,5 +1,5 @@
-import {Engine, World, Body} from "matter-js";
-import {BaseActor} from "../actor/base";
+import {Engine, World, Body, Render} from "matter-js";
+import {BaseActor} from "./actor";
 //import {Constructable} from "./utils";
 
 export interface ISimulatable {
@@ -23,22 +23,53 @@ export function canSimulate(arg: BaseActor): arg is ISimulatable {
 //     abstract getBody(): Body;
 // }
 
+interface DebuggingData {
+    debug?: boolean;
+    view?: HTMLCanvasElement;
+}
+
 export class PhysicsManager {
     private _engine: Engine;
     private _world: World;
+    private _debug_renderer: Render;
+    debug: boolean = false;
 
-    constructor() {
+    constructor(debug_data: DebuggingData = {}) {
         this._engine = Engine.create();
         this._world = this._engine.world;
+
+        // If debugging, create a debugging canvas renderer
+        if (debug_data.debug) {
+            this._debug_renderer = Render.create({
+                canvas: debug_data.view,
+                engine: this._engine,
+                options: {
+                    width: 0,
+                    height: 0,
+                }
+            });
+
+            // Note: Typings for Matter lib are missing properties
+            (this._debug_renderer.options as any).wireframeBackground = 'transparent';
+            (this._debug_renderer.options as any).background = 'transparent';
+            (this._debug_renderer.options as any).showDebug = true;
+            (this._debug_renderer.options as any).showVelocity = true;
+            (this._debug_renderer.options as any).showCollisions = true;
+            (this._debug_renderer.options as any).showAxes = true;
+            (this._debug_renderer.options as any).showPositions = true;
+            (this._debug_renderer.options as any).showAngleIndicator = true;
+            (this._debug_renderer.options as any).showIds = true;
+            //(this._debug_renderer.options as any).showMousePosition = true;
+        }
     }
 
     public update(delta: number): void {
         Engine.update(this._engine, delta);
-    }
 
-    // public oldadd(object: Composite | Constraint | Body): void {
-    //     World.add(this._world, object);
-    // }
+        if (this._debug_renderer) {
+            Render.world(this._debug_renderer);
+        }
+    }
 
     add(simulatable: ISimulatable) {
         World.add(this._world, simulatable.getSimulatable());
