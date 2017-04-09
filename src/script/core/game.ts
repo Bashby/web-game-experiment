@@ -36,12 +36,13 @@ export class Game {
     constructor() {
         this.renderer = new RenderManager();
         this.asset = new AssetManager();
-        this._input = new InputManager(this.renderer.pixi_renderer);
+        this._input = new InputManager(this.renderer.pixi_renderer, this.renderer.debug_renderer);
         this._network = new NetworkManager();
         this._ticker = new ticker.Ticker();
         this._physics = new PhysicsManager({
             debug: this._config.game.debug || false,
-            view: this.renderer.debug_canvas
+            view: this.renderer.debug_canvas,
+            mouse: this._input.debug_mouse,
         });
 
         // If debugging, show debugging tools

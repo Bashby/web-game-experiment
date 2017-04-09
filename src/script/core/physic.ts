@@ -1,9 +1,9 @@
-import {Engine, World, Body, Render} from "matter-js";
+import {Engine, World, Body, Constraint, Composite, Mouse, MouseConstraint, Render} from "matter-js";
 import {BaseActor} from "./actor";
 //import {Constructable} from "./utils";
 
 export interface ISimulatable {
-        getSimulatable(): Body;
+        getSimulatable(): Body | Constraint | Composite;
 }
 
 export function canSimulate(arg: BaseActor): arg is ISimulatable {
@@ -26,6 +26,7 @@ export function canSimulate(arg: BaseActor): arg is ISimulatable {
 interface DebuggingData {
     debug?: boolean;
     view?: HTMLCanvasElement;
+    mouse?: Mouse;
 }
 
 export class PhysicsManager {
@@ -38,29 +39,42 @@ export class PhysicsManager {
         this._engine = Engine.create();
         this._world = this._engine.world;
 
-        // If debugging, create a debugging canvas renderer
+        // Handle debugging, if requested
         if (debug_data.debug) {
-            this._debug_renderer = Render.create({
-                canvas: debug_data.view,
-                engine: this._engine,
-                options: {
-                    width: 0,
-                    height: 0,
-                }
-            });
-
-            // Note: Typings for Matter lib are missing properties
-            (this._debug_renderer.options as any).wireframeBackground = 'transparent';
-            (this._debug_renderer.options as any).background = 'transparent';
-            (this._debug_renderer.options as any).showDebug = true;
-            (this._debug_renderer.options as any).showVelocity = true;
-            (this._debug_renderer.options as any).showCollisions = true;
-            (this._debug_renderer.options as any).showAxes = true;
-            (this._debug_renderer.options as any).showPositions = true;
-            (this._debug_renderer.options as any).showAngleIndicator = true;
-            (this._debug_renderer.options as any).showIds = true;
-            //(this._debug_renderer.options as any).showMousePosition = true;
+            this._setupDebugging(debug_data); 
         }
+    }
+
+    private _setupDebugging(data: DebuggingData): void {
+        // Create a debugging canvas renderer
+        this._debug_renderer = Render.create({
+            canvas: data.view,
+            engine: this._engine,
+            options: {
+                width: 0, // Prevent Matter from controlling canvas size
+                height: 0,
+            }
+        });
+
+        // Setup mouse input
+        let mouseConstraint = MouseConstraint.create(this._engine, {
+            mouse: data.mouse,
+        });
+        World.add(this._world, mouseConstraint);
+        (this._debug_renderer as any).mouse = data.mouse;
+
+        // Set some other debugging options on the debugging renderer
+        // Note: Typings for Matter lib are missing properties, override!
+        (this._debug_renderer.options as any).wireframeBackground = 'transparent';
+        (this._debug_renderer.options as any).background = 'transparent';
+        (this._debug_renderer.options as any).showDebug = true;
+        (this._debug_renderer.options as any).showVelocity = true;
+        (this._debug_renderer.options as any).showCollisions = true;
+        (this._debug_renderer.options as any).showAxes = true;
+        (this._debug_renderer.options as any).showPositions = true;
+        (this._debug_renderer.options as any).showAngleIndicator = true;
+        (this._debug_renderer.options as any).showIds = true;
+        (this._debug_renderer.options as any).showMousePosition = true;
     }
 
     public update(delta: number): void {
@@ -71,7 +85,7 @@ export class PhysicsManager {
         }
     }
 
-    add(simulatable: ISimulatable) {
+    public add(simulatable: ISimulatable) {
         World.add(this._world, simulatable.getSimulatable());
     }
 }
