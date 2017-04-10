@@ -17,7 +17,7 @@ function check() {
         // Put actors on the stage
         let ball = game.add(new Ball(300, 200));
         let center = game.renderer.getCenterOfStage();
-        let floor = game.add(new Wall(center.x, center.y));
+        let floor = game.add(new Wall(center.x, center.y + 200));
 
         // Build GUI
         var f1 = game.debug_gui.addFolder('Bunny Visuals');

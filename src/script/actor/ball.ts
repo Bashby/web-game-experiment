@@ -13,11 +13,12 @@ export class Ball extends GameActor {
      * @param y the y position to create the Ball
      */
     constructor(x: number, y: number) {
-        super(x, y, Ball.ACTOR_TYPE);
+        super(x, y, null, null, null, null, Ball.ACTOR_TYPE);
     }
 
     render(): void {
         this._sprite.position = new Point(this._body.position.x, this._body.position.y);
+        this._sprite.rotation = this._body.angle;
     }
 }
 

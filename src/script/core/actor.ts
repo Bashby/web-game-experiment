@@ -1,5 +1,5 @@
 // Vendor libs
-import {Sprite, Texture, Point, utils} from "pixi.js";
+import {Sprite, extras, Texture, Point, utils} from "pixi.js";
 import {Body, Bodies} from "matter-js";
 import {find} from "lodash";
 
@@ -44,56 +44,73 @@ export class GameActor extends BaseActor implements IGameActor {
     protected _body: Body;
 
     constructor(
-        x: number = 50,
-        y: number = 50,
+        x: number,
+        y: number,
+        w?: number,
+        h?: number,
+        scale?: number,
+        rotation?: number,
         actorType: string = 'base',
-        staticBody: boolean = false
+        staticBody: boolean = false,
+        spriteType: string = 'sprite',
     ) {
         super();
 
         // Assign configs, where available
         let actorConfig = find(Config.actors, ["name", actorType]);
 
-        // Assign custom render position, if defined
-        if (actorConfig.render.position) {
-            x = actorConfig.render.position.x || x;
-            y = actorConfig.render.position.y || y;
-        }
-        
-        // Assign custom physic position, if defined
-        let physic_x, physic_y;
-        if (actorConfig.physic.position) {
-            physic_x = actorConfig.physic.position.x || x;
-            physic_y = actorConfig.physic.position.x || x;
-        } else {
-            physic_x = x;
-            physic_y = y;
-        }
+        // Assign config variables as overrides
+        w = actorConfig.render.size ? actorConfig.render.size.w : w;
+        h = actorConfig.render.size ? actorConfig.render.size.h : h;
+        staticBody = actorConfig.physic.static || staticBody;
+        spriteType = actorConfig.render.sprite_type || spriteType;
+        scale = actorConfig.render.scale || scale || 1.0;
+        rotation = actorConfig.render.rotation || rotation || 0;
 
         // render
         this._texture = utils.TextureCache[actorConfig.render.texture];
-        this._sprite = new Sprite(this._texture);
-        this._sprite.anchor.set(0.5);
-        this._sprite.position.set(x, y);
-        this._sprite.width = 100;
-        this._sprite.height = 100;
-
-        // physic
-        staticBody = actorConfig.physic.static || staticBody;
-        let options = { isStatic: staticBody, restitution: 0.6, friction: 0.1 };
-        switch(actorConfig.physic.boundingBox) {
-            case "circle": {
-                this._body = Bodies.circle(physic_x, physic_y, this._sprite.width / 2, options);
+        switch(spriteType) {
+            case "sprite": {
+                this._sprite = new Sprite(this._texture);
+                // Note: Overrides the texture size
+                if (w) { this._sprite.width = w; }
+                if (h) { this._sprite.height = h; }
                 break;
             }
 
-            case "rectangle": {
-                this._body = Bodies.rectangle(physic_x, physic_y, 500, 50, options);
+            case "tiling sprite": {
+                this._sprite = new extras.TilingSprite(
+                    this._texture,
+                    w,
+                    h
+                );
                 break;
             }
 
             default: {
-                throw Error("Unknown boundingBox!");
+                throw Error("Unknown sprite type!");
+            }
+        }
+        this._sprite.anchor.set(0.5);
+        this._sprite.position.set(x, y);
+        this._sprite.scale.set(scale);
+        this._sprite.rotation = rotation;
+
+        // physic
+        let options = { isStatic: staticBody, restitution: 0.6, friction: 0.1, angle: rotation };
+        switch(actorConfig.physic.bounding_box) {
+            case "circle": {
+                this._body = Bodies.circle(x, y, this._sprite.width / 2, options);
+                break;
+            }
+
+            case "rectangle": {
+                this._body = Bodies.rectangle(x, y, this._sprite.width, this._sprite.height, options);
+                break;
+            }
+
+            default: {
+                throw Error("Unknown bounding box!");
             }
         }
     }

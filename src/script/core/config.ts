@@ -2,6 +2,7 @@
 const config = <IConfiguration>require("../config.yaml");
 
 type BoundingBoxes = "circle" | "rectangle";
+type SpriteTypes = "sprite" | "animated sprite" | "tiling sprite";
 
 interface IConfigurationGame {
     version: string
@@ -17,13 +18,16 @@ interface IConfigurationActor {
 
 interface IConfigurationRender {
     texture?: string
-    position?: IConfigurationPosition
+    size?: IConfigurationSize
+    sprite_type?: SpriteTypes
+    scale?: number
+    rotation?: number
 }
 
 interface IConfigurationPhysic {
-    boundingBox?: BoundingBoxes
+    bounding_box?: BoundingBoxes
     static?: boolean
-    position?: IConfigurationPosition
+    size?: IConfigurationSize
 }
 
 interface IConfigurationAsset {
@@ -34,9 +38,9 @@ interface IConfigurationTexture {
     // TODO Fill out
 }
 
-interface IConfigurationPosition {
-    x?: number
-    y?: number
+interface IConfigurationSize {
+    w: number
+    h: number
 }
 
 export interface IConfiguration {

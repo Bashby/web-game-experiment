@@ -14,7 +14,7 @@ export class Wall extends GameActor {
      * @param y the y position to create the actor
      */
     constructor(x: number, y: number) {
-        super(x, y, Wall.ACTOR_TYPE, true);
+        super(x, y, null, null, null, null, Wall.ACTOR_TYPE, true);
     }
 
 

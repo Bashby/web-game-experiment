@@ -122,11 +122,11 @@ export class RenderManager {
          * Scale the canvas horizontally and vertically keeping in mind the screen estate we have
          * at our disposal. This keeps the relative game dimensions in place.
          */
-        if (height / this.targetHeight < width / this.targetWidth) {
-            this.stage.scale.x = this.stage.scale.y = height / this.targetHeight;
-        } else {
-            this.stage.scale.x = this.stage.scale.y = width / this.targetWidth;
-        }
+        // if (height / this.targetHeight < width / this.targetWidth) {
+        //     this.stage.scale.x = this.stage.scale.y = height / this.targetHeight;
+        // } else {
+        //     this.stage.scale.x = this.stage.scale.y = width / this.targetWidth;
+        // }
 
         /**
          * iOS likes to scroll when rotating - fix that 
