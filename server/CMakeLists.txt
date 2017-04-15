@@ -1,7 +1,24 @@
-cmake_minimum_required(VERSION 3.7)
-project(server)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.7)
+PROJECT(server)
 
-set(CMAKE_CXX_STANDARD 14)
+# Target C++11
+set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp)
-add_executable(server ${SOURCE_FILES})
+# Define vender paths
+SET (BOX2D_BUILDS_DIR "${CMAKE_SOURCE_DIR}/include/Box2D/Box2D/Build/Box2D")
+SET (BOX2D_SOURCE_DIR "${CMAKE_SOURCE_DIR}/include/Box2D/Box2D")
+
+# Define local paths
+SET(SOURCE_FILES main.cpp)
+
+# Include headers
+INCLUDE_DIRECTORIES( BEFORE ${BOX2D_SOURCE_DIR} )
+
+# Include libraries
+LINK_DIRECTORIES(${BOX2D_BUILDS_DIR})
+
+# Output EXE
+ADD_EXECUTABLE(server ${SOURCE_FILES})
+
+# Link EXE
+TARGET_LINK_LIBRARIES(server libBox2D.a)
