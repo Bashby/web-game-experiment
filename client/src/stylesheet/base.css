@@ -1,0 +1,11 @@
+@import "~normalize.css";
+
+body {
+    overflow: hidden;
+}
+
+canvas.renderer#debug {
+    left: 0px;
+    top: 0px;
+    position: absolute;
+}
