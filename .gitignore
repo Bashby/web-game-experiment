@@ -181,3 +181,11 @@ modules.xml
 # generated directories
 bin/
 obj/
+
+### VisualStudioCode ###
+# Bashby edit: For now, let's not track anything in vscode
+.vscode/*
+#!.vscode/settings.json
+#!.vscode/tasks.json
+#!.vscode/launch.json
+#!.vscode/extensions.json
