@@ -1,3 +1,9 @@
+> This was early work on WebGL games that spawned [EhhWorld](https://github.com/Bashby/ehhworld-server). This is an archive.
+
+<p align="center">
+  <img src="client/src/image/favicon.png" width="150" height="150" title="WebGameExperiment Logo">
+</p>
+
 WebRTC Experiment
 ==============
 
